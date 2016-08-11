@@ -12,6 +12,7 @@ and omits many desirable features.
 #### Libraries
 # Standard library
 import random
+from timeit import default_timer as timer
 
 # Third-party libraries
 import numpy as np
@@ -54,15 +55,17 @@ class Network(object):
         if test_data: n_test = len(test_data)
         n = len(training_data)
         for j in xrange(epochs):
+            time_start = timer()
             random.shuffle(training_data)
             mini_batches = [
                 training_data[k:k+mini_batch_size]
                 for k in xrange(0, n, mini_batch_size)]
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
+            time_end = timer()
             if test_data:
-                print "Epoch {0}: {1} / {2}".format(
-                    j, self.evaluate(test_data), n_test)
+                print "Epoch {0}: {1} / {2} - {3}".format(
+                    j, self.evaluate(test_data), n_test, time_end - time_start)
             else:
                 print "Epoch {0} complete".format(j)
 
